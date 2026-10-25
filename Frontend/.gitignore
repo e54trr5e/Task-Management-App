@@ -1,0 +1,67 @@
+# =========================
+# NODE MODULES
+# =========================
+
+node_modules/
+Backend/node_modules/
+
+
+# =========================
+# ENVIRONMENT VARIABLES
+# =========================
+
+.env
+.env.*
+Backend/.env
+Backend/.env.*
+
+
+# =========================
+# BUILD FILES
+# =========================
+
+dist/
+build/
+Backend/dist/
+Backend/build/
+
+
+# =========================
+# LOG FILES
+# =========================
+
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+
+# =========================
+# EDITOR FILES
+# =========================
+
+.vscode/
+.idea/
+
+
+# =========================
+# OPERATING SYSTEM FILES
+# =========================
+
+.DS_Store
+Thumbs.db
+
+
+# =========================
+# VITE
+# =========================
+
+.vite/
+
+
+# =========================
+# TEMPORARY FILES
+# =========================
+
+*.tmp
+*.temp
