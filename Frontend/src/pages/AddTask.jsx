@@ -50,7 +50,7 @@ function AddTask({ tasks, setTasks }) {
   try {
 
     const response = await fetch(
-      "`${API_URL}/api/tasks`",
+      `${API_URL}/api/tasks`,
       {
         method: "POST",
 

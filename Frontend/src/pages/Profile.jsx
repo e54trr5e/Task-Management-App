@@ -3,6 +3,8 @@ import {
   useState,
 } from "react";
 
+import { API_URL } from "../api";
+
 import {
   useNavigate,
 } from "react-router-dom";
