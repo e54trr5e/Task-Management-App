@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { API_URL } from "../api";
 
 
 function Tasks({ tasks, setTasks }) {
@@ -68,7 +69,7 @@ function Tasks({ tasks, setTasks }) {
     try {
 
       const response = await fetch(
-        `http://localhost:5000/api/tasks/${id}`,
+        `${API_URL}/api/tasks/${id}`,
         {
           method: "DELETE",
 
@@ -142,7 +143,7 @@ function Tasks({ tasks, setTasks }) {
     try {
 
       const response = await fetch(
-        `http://localhost:5000/api/tasks/${task._id}`,
+        `${API_URL}/api/tasks/${task._id}`,
         {
           method: "PUT",
 
@@ -236,7 +237,9 @@ function Tasks({ tasks, setTasks }) {
     );
 
     setEditDueDate(
-      task.dueDate || ""
+      task.dueDate
+        ? task.dueDate.slice(0, 10)
+        : ""
     );
 
   }
@@ -298,7 +301,7 @@ function Tasks({ tasks, setTasks }) {
     try {
 
       const response = await fetch(
-        `http://localhost:5000/api/tasks/${editingTask._id}`,
+        `${API_URL}/api/tasks/${editingTask._id}`,
         {
 
           method: "PUT",
@@ -644,7 +647,10 @@ function Tasks({ tasks, setTasks }) {
                           <span className="bg-gray-100 px-3 py-1 rounded-full text-sm">
 
                             Due: {
-                              task.dueDate
+                              task.dueDate.slice(
+                                0,
+                                10
+                              )
                             }
 
                           </span>

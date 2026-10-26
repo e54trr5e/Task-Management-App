@@ -1,3 +1,4 @@
+import { API_URL } from "./api";
 import {
   useEffect,
   useState,
@@ -77,7 +78,7 @@ function App() {
     try {
 
       const response = await fetch(
-        "http://localhost:5000/api/tasks",
+        `${API_URL}/api/tasks`,
         {
           method: "GET",
 

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { API_URL } from "../api";
 function AddTask({ tasks, setTasks }) {
 
   const [title, setTitle] = useState("");
@@ -50,7 +50,7 @@ function AddTask({ tasks, setTasks }) {
   try {
 
     const response = await fetch(
-      "http://localhost:5000/api/tasks",
+      "`${API_URL}/api/tasks`",
       {
         method: "POST",
 

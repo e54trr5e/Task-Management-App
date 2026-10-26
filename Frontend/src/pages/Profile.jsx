@@ -123,7 +123,7 @@ function Profile({
     try {
 
       const response = await fetch(
-        "http://localhost:5000/api/auth/profile",
+        `${API_URL}/api/auth/profile`,
         {
           headers: {
 
@@ -266,7 +266,7 @@ function Profile({
 
 
       const response = await fetch(
-        "http://localhost:5000/api/auth/profile",
+        `${API_URL}/api/auth/profile`,
         {
           method: "PUT",
 
@@ -397,7 +397,7 @@ function Profile({
 
 
       const response = await fetch(
-        "http://localhost:5000/api/auth/preferences",
+       `${API_URL}/api/auth/preferences`,
         {
           method: "PUT",
 
@@ -547,7 +547,7 @@ function Profile({
 
 
       const response = await fetch(
-        "http://localhost:5000/api/auth/change-password",
+        `${API_URL}/api/auth/change-password`,
         {
           method: "PUT",
 
@@ -655,7 +655,7 @@ function Profile({
 
 
       const response = await fetch(
-        "http://localhost:5000/api/auth/account",
+        `${API_URL}/api/auth/account`,
         {
           method: "DELETE",
 
