@@ -1,6 +1,9 @@
 const dns = require("dns");
 
-// DNS configuration for MongoDB Atlas
+// =========================
+// DNS CONFIGURATION
+// =========================
+
 dns.setServers([
     "8.8.8.8",
     "1.1.1.1",
@@ -10,7 +13,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
-// Load environment variables
 require("dotenv").config();
 
 
@@ -32,7 +34,7 @@ const startWeeklyReportJob = require("./jobs/weeklyReportJob");
 
 
 // =========================
-// CREATE EXPRESS APP
+// CREATE APP
 // =========================
 
 const app = express();
@@ -48,14 +50,124 @@ app.use(express.json());
 
 
 // =========================
+// MONGODB CONNECTION
+// =========================
+
+let connectionPromise = null;
+
+async function connectDB() {
+
+    // Already connected
+    if (mongoose.connection.readyState === 1) {
+
+        return;
+
+    }
+
+
+    // Connection is already being created
+    if (connectionPromise) {
+
+        return connectionPromise;
+
+    }
+
+
+    if (!process.env.MONGO_URI) {
+
+        throw new Error(
+            "MONGO_URI environment variable is missing"
+        );
+
+    }
+
+
+    connectionPromise = mongoose.connect(
+        process.env.MONGO_URI,
+        {
+            serverSelectionTimeoutMS: 10000,
+        }
+    );
+
+
+    try {
+
+        await connectionPromise;
+
+        console.log(
+            "MongoDB Connected"
+        );
+
+    } catch (error) {
+
+        connectionPromise = null;
+
+        console.error(
+            "MongoDB connection error:",
+            error
+        );
+
+        throw error;
+
+    }
+
+}
+
+
+// =========================
+// DATABASE MIDDLEWARE
+// =========================
+//
+// API requests wait until MongoDB
+// is connected before continuing.
+// =========================
+
+app.use("/api", async (req, res, next) => {
+
+    try {
+
+        await connectDB();
+
+        next();
+
+    } catch (error) {
+
+        console.error(
+            "Database unavailable:",
+            error.message
+        );
+
+
+        return res.status(503).json({
+
+            message:
+                "Database connection unavailable",
+
+        });
+
+    }
+
+});
+
+
+// =========================
 // API ROUTES
 // =========================
 
-app.use("/api/auth", authRoutes);
+app.use(
+    "/api/auth",
+    authRoutes
+);
 
-app.use("/api/tasks", taskRoutes);
+app.use(
+    "/api/tasks",
+    taskRoutes
+);
 
-app.use("/api/ai", aiRoutes);
+app.use(
+    "/api/ai",
+    aiRoutes
+);
 
 
 // =========================
@@ -64,7 +176,9 @@ app.use("/api/ai", aiRoutes);
 
 app.get("/", (req, res) => {
 
-    res.send("TaskFlow Backend Running");
+    res.send(
+        "TaskFlow Backend Running"
+    );
 
 });
 
@@ -73,69 +187,46 @@ app.get("/", (req, res) => {
 // PORT
 // =========================
 
-const PORT = process.env.PORT || 5000;
+const PORT =
+    process.env.PORT || 5000;
 
 
 // =========================
-// CONNECT TO MONGODB
-// =========================
-
-async function connectDB() {
-
-    try {
-
-        // Avoid reconnecting if MongoDB
-        // is already connected
-        if (mongoose.connection.readyState === 1) {
-            return;
-        }
-
-        await mongoose.connect(
-            process.env.MONGO_URI
-        );
-
-        console.log("MongoDB Connected");
-
-    } catch (error) {
-
-        console.log(
-            "MongoDB connection error:"
-        );
-
-        console.log(error);
-
-    }
-
-}
-
-
-// =========================
-// CONNECT DATABASE
-// =========================
-
-connectDB();
-
-
-// =========================
-// LOCAL DEVELOPMENT ONLY
+// LOCAL DEVELOPMENT
 // =========================
 
 if (process.env.VERCEL !== "1") {
 
-    // Start background jobs locally
-    startReminderJob();
+    connectDB()
+        .then(() => {
 
-    startWeeklyReportJob();
+            startReminderJob();
+
+            startWeeklyReportJob();
 
 
-    // Start Express server
-    app.listen(PORT, () => {
+            app.listen(
+                PORT,
+                () => {
 
-        console.log(
-            `Server running on port ${PORT}`
-        );
+                    console.log(
+                        `Server running on port ${PORT}`
+                    );
 
-    });
+                }
+            );
+
+        })
+        .catch((error) => {
+
+            console.error(
+                "Failed to start server:",
+                error.message
+            );
+
+            process.exit(1);
+
+        });
 
 }
 
