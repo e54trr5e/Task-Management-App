@@ -55,13 +55,28 @@ function startWeeklyReportJob() {
                     const user of users
                 ) {
 
-                    // Get user's tasks
+                    // =========================
+                    // GET ACTIVE USER TASKS
+                    // =========================
+                    //
+                    // Soft-deleted tasks stay
+                    // in MongoDB for future ML,
+                    // but they should not affect
+                    // the user's current report.
+                    // =========================
 
                     const tasks =
                         await Task.find({
 
                             user:
                                 user._id,
+
+                            isDeleted: {
+
+                                $ne:
+                                    true,
+
+                            },
 
                         });
 
@@ -319,6 +334,7 @@ function startWeeklyReportJob() {
 
         },
 
+
         // =========================
         // TIMEZONE
         // =========================
@@ -339,4 +355,4 @@ function startWeeklyReportJob() {
 
 
 module.exports =
-    startWeeklyReportJob;
+    startWeeklyReportJob; 

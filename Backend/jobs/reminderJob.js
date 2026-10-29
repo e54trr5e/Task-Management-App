@@ -66,7 +66,7 @@ function startReminderJob() {
 
 
                 // =========================
-                // FIND TASKS
+                // FIND ACTIVE TASKS
                 // =========================
 
                 const tasks =
@@ -89,6 +89,28 @@ function startReminderJob() {
 
                             $ne:
                                 "Completed",
+
+                        },
+
+
+                        // =====================
+                        // IGNORE DELETED TASKS
+                        // =====================
+                        //
+                        // Deleted tasks remain
+                        // in MongoDB for ML
+                        // history, but should
+                        // never receive reminders.
+                        //
+                        // $ne: true also supports
+                        // old tasks that do not
+                        // have isDeleted yet.
+                        // =====================
+
+                        isDeleted: {
+
+                            $ne:
+                                true,
 
                         },
 
@@ -269,10 +291,6 @@ function startReminderJob() {
 
                     if (emailSent) {
 
-                        // Only mark reminder
-                        // as sent if email
-                        // was successful
-
                         task.reminderSent =
                             true;
 
@@ -305,6 +323,7 @@ function startReminderJob() {
             }
 
         },
+
 
         // =========================
         // TIMEZONE

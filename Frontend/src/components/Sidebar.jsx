@@ -1,15 +1,8 @@
-import {
-  NavLink,
-  useNavigate,
-} from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
-function Sidebar({
-  setToken,
-  setUser,
-  sidebarOpen,
-  setSidebarOpen,
-}) {
+import { Sparkles } from "lucide-react";
 
+function Sidebar({ setToken, setUser, sidebarOpen, setSidebarOpen }) {
   const navigate = useNavigate();
 
   const linkStyle = ({ isActive }) =>
@@ -24,7 +17,6 @@ function Sidebar({
   }
 
   function logout() {
-
     localStorage.removeItem("token");
     localStorage.removeItem("user");
 
@@ -63,25 +55,17 @@ function Sidebar({
           duration-300
           ease-in-out
 
-          ${
-            sidebarOpen
-              ? "translate-x-0"
-              : "-translate-x-full"
-          }
+          ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
 
           md:translate-x-0
         `}
       >
-
         {/* Logo + Mobile Close Button */}
 
         <div className="flex items-center justify-between mb-10">
-
           <h1 className="text-2xl font-bold text-white">
             Task
-            <span className="text-yellow-400">
-              Flow
-            </span>
+            <span className="text-yellow-400">Flow</span>
           </h1>
 
           <button
@@ -92,59 +76,46 @@ function Sidebar({
           >
             ✕
           </button>
-
         </div>
 
         {/* Navigation */}
 
         <nav className="space-y-3">
-
-          <NavLink
-            to="/"
-            end
-            className={linkStyle}
-            onClick={closeSidebar}
-          >
+          <NavLink to="/" end className={linkStyle} onClick={closeSidebar}>
             Dashboard
           </NavLink>
 
-          <NavLink
-            to="/tasks"
-            className={linkStyle}
-            onClick={closeSidebar}
-          >
+          <NavLink to="/tasks" className={linkStyle} onClick={closeSidebar}>
             My Tasks
           </NavLink>
 
-          <NavLink
-            to="/add-task"
-            className={linkStyle}
-            onClick={closeSidebar}
-          >
+          <NavLink to="/add-task" className={linkStyle} onClick={closeSidebar}>
             Add Task
           </NavLink>
 
           <NavLink
-            to="/calendar"
-            className={linkStyle}
+            to="/ai-planner"
             onClick={closeSidebar}
+            className={({ isActive }) =>
+              `flex items-center gap-3 rounded-lg px-4 py-3 transition ${
+                isActive
+                  ? "bg-yellow-400 font-semibold text-black"
+                  : "text-white hover:bg-zinc-900 hover:text-white"
+              }`
+            }
           >
+            AI Planner
+          </NavLink>
+
+          <NavLink to="/calendar" className={linkStyle} onClick={closeSidebar}>
             Calendar
           </NavLink>
 
-          <NavLink
-            to="/analytics"
-            className={linkStyle}
-            onClick={closeSidebar}
-          >
+          <NavLink to="/analytics" className={linkStyle} onClick={closeSidebar}>
             Analytics
           </NavLink>
 
-          <NavLink
-            to="/profile"
-            className={linkStyle}
-            onClick={closeSidebar}
-          >
+          <NavLink to="/profile" className={linkStyle} onClick={closeSidebar}>
             Profile
           </NavLink>
 
@@ -166,9 +137,7 @@ function Sidebar({
           >
             Logout
           </button>
-
         </nav>
-
       </aside>
     </>
   );
